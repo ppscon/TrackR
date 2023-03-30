@@ -1,5 +1,5 @@
 frontend/.env
-backend/.env
+backend/driver/src/.env
 # Logs
 logs
 *.log

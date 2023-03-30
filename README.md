@@ -1,3 +1,4 @@
+
 # TrackR - Vehicle Delivery Tracking Example App
 
 TrackR is a web-based application that helps companies manage their fleet of delivery vehicles. It provides an easy way to monitor the performance of vehicles, track expenses, schedule maintenance tasks, and keep track of driver behavior.
@@ -81,8 +82,34 @@ classDiagram
         +fetchVehicleTelemetry(): Promise
     }
 
+    class ApiGateway {
+    }
+
+    class DriverService {
+    }
+
+    class PositionSimulator {
+    }
+
+    class PositionTracker {
+    }
+
+    class StaffService {
+    }
+
+    class VehicleTelemetry {
+    }
+
     App -- Map
     App -- Vehicle
     App -- DriverDetails
     Vehicle -- ApiService
     DriverDetails -- ApiService
+    ApiService -- ApiGateway
+    ApiGateway -- DriverService
+    ApiGateway -- PositionSimulator
+    ApiGateway -- PositionTracker
+    ApiGateway -- StaffService
+    ApiGateway -- VehicleTelemetry
+end
+```

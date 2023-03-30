@@ -9,8 +9,8 @@ const VerticalFrame = ({ addVehicle }) => {
     });
 
     const [coordinates, setCoordinates] = useState({
-        latitude: 51.5074,
-        longitude: -0.1278,
+        latitude: 51.5079,
+        longitude: -0.0877,
     });
 
     const [speed, setSpeed] = useState(50);

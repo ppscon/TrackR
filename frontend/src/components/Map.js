@@ -12,8 +12,9 @@ const Map = () => {
         const map = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [-0.1278, 51.5074],
-            zoom: 10,
+            //London Bridge Coordinates
+            center: [-0.0877, 51.5079],
+            zoom: 15,
         });
 
         return () => {
