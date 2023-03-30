@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mapbox-gl" level="project" />
     <orderEntry type="library" name="Map" level="project" />
+    <orderEntry type="library" name="mapbox-gl" level="application" />
   </component>
 </module>

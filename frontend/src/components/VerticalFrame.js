@@ -1,46 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './VerticalFrame.css';
+import johnDoeImg from '../images/john_doe.jpeg';
+import janeSmithImg from '../images/jane_smith.jpeg';
+import michaelBrownImg from '../images/michael_brown.jpeg';
+import emilyJohnsonImg from '../images/emily_johnson.jpeg';
 
+const getDriverImage = (name) => {
+    switch (name) {
+        case 'John Doe':
+            return johnDoeImg;
+        case 'Jane Smith':
+            return janeSmithImg;
+        case 'Emily Johnson':
+            return emilyJohnsonImg;
+        case 'Michael Brown':
+            return michaelBrownImg;
+        default:
+            return '';
+    }
+};
 
-const VerticalFrame = ({ addVehicle }) => {
-    const [driverDetails, setDriverDetails] = useState({
-        name: 'John Doe',
-        vehicle: 'Van 1',
-    });
+const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
+    const [selectedDriver, setSelectedDriverLocal] = useState(null);
 
-    const [coordinates, setCoordinates] = useState({
-        latitude: 51.5079,
-        longitude: -0.0877,
-    });
+    const handleDriverClick = (driver) => {
+        setSelectedDriverLocal(driver);
+        setSelectedDriver(driver);
+    };
 
-    const [speed, setSpeed] = useState(50);
-    const [currentDrop, setCurrentDrop] = useState(1);
+    const renderDriverDetails = (driver) => {
+        if (!driver) return null;
 
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            setCoordinates({
-                latitude: coordinates.latitude + (Math.random() - 0.5) * 0.01,
-                longitude: coordinates.longitude + (Math.random() - 0.5) * 0.01,
-            });
-            setSpeed(speed + (Math.random() - 0.5) * 5);
-            setCurrentDrop((currentDrop % 10) + 1);
-        }, 5000);
-
-        return () => clearInterval(intervalId);
-    }, [coordinates, speed, currentDrop]);
+        return (
+            <div>
+                <img
+                    src={getDriverImage(driver.name)}
+                    alt={driver.name}
+                    style={{ width: '100%', height: 'auto' }}
+                />
+                <p>Phone: {driver.phone}</p>
+                <p>Email: {driver.email}</p>
+                <p>Vehicle ID: {driver.vehicle_id}</p>
+            </div>
+        );
+    };
 
     return (
         <div className="vertical-frame">
             <h2>Driver Details</h2>
-            <p>Name: {driverDetails.name}</p>
-            <p>Vehicle: {driverDetails.vehicle}</p>
-            <h3>Coordinates</h3>
-            <p>Latitude: {coordinates.latitude}</p>
-            <p>Longitude: {coordinates.longitude}</p>
-            <h3>Speed</h3>
-            <p>{speed} km/h</p>
-            <h3>Current Drop</h3>
-            <p>{currentDrop} / 10</p>
+            {drivers.map((driver) => (
+                <div key={driver.id} onDoubleClick={() => handleDriverClick(driver)}>
+                    <img
+                        src={getDriverImage(driver.name)}
+                        alt={driver.name}
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                    <p>Name: {driver.name}</p>
+                    <p>Phone: {driver.phone}</p>
+                    <p>Email: {driver.email}</p>
+                    <p>Vehicle ID: {driver.vehicle_id}</p>
+                    {driver.coordinates && (
+                        <>
+                            <h3>Coordinates</h3>
+                            <p>Latitude: {driver.coordinates.latitude}</p>
+                            <p>Longitude: {driver.coordinates.longitude}</p>
+                        </>
+                    )}
+                </div>
+            ))}
+            <h3>Selected Driver</h3>
+            {renderDriverDetails(selectedDriver)}
 
             <h3>Add Vehicle</h3>
             <button onClick={() => addVehicle('van')}>Add Van</button>

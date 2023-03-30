@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import VerticalFrame from './components/VerticalFrame';
+import { fetchDrivers } from './services/driverService';
 import './App.css';
+
 function App() {
+    const [selectedDriver, setSelectedDriver] = useState(null);
+    const [drivers, setDrivers] = useState([]);
+
+    useEffect(() => {
+        fetchDrivers().then((data) => {
+            if (Array.isArray(data)) {
+                setDrivers(data);
+            } else {
+                console.error('Unexpected data format. Expected an array of drivers.');
+            }
+        });
+    }, []);
+
+
     return (
         <div className="App">
             <div style={{ display: 'flex' }}>
-                <VerticalFrame />
-                <Map />
+                <VerticalFrame drivers={drivers} setSelectedDriver={setSelectedDriver} />
+                <Map drivers={drivers} selectedDriver={selectedDriver} setSelectedDriver={setSelectedDriver} />
             </div>
         </div>
     );
