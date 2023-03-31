@@ -28,6 +28,18 @@ router.get('/drivers/:id', async (req, res) => {
     }
 });
 
+// Fetch deliveries for a specific driver by ID
+router.get('/drivers/:id/deliveries', async (req, res) => {
+    const driverId = req.params.id;
+
+    try {
+        const [rows] = await db.query('SELECT * FROM deliveries WHERE driver_id = ?', [driverId]);
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Create a new driver
 router.post('/drivers', async (req, res) => {
     const newDriver = req.body;
@@ -71,11 +83,6 @@ router.delete('/drivers/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-
-    router.get('/api/test', (req, res) => {
-        res.json({ message: 'API Gateway test route' });
-    });
-
 });
 
 module.exports = router;

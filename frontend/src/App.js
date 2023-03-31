@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import VerticalFrame from './components/VerticalFrame';
-import { fetchDrivers } from './services/driverService';
 import './App.css';
+import { fetchDrivers, fetchDeliveries } from './services/driverService';
+
 
 function App() {
     const [selectedDriver, setSelectedDriver] = useState(null);

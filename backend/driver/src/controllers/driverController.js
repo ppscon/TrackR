@@ -9,9 +9,6 @@ exports.getAllDrivers = async (req, res, next) => {
     }
 };
 
-
-
-
 exports.getDriverById = async (req, res, next) => {
     try {
         const [rows, _] = await pool.query('SELECT * FROM drivers WHERE id = ?', [req.params.driverId]);
@@ -27,6 +24,24 @@ exports.getDriverById = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getDriverDeliveries = async (req, res, next) => {
+    try {
+        const [rows, _] = await pool.query('SELECT * FROM deliveries WHERE driver_id = ?', [req.params.driverId]);
+
+        if (rows.length !== 0) {
+            res.status(200).json(rows);
+        } else {
+            const error = new Error('Deliveries not found for the specified driver');
+            error.status = 404;
+            throw error;
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// The rest of your driverController.js code (createDriver, updateDriver, deleteDriver)
 
 exports.createDriver = async (req, res, next) => {
     try {

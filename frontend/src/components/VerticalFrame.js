@@ -1,9 +1,10 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import './VerticalFrame.css';
 import johnDoeImg from '../images/john_doe.jpeg';
 import janeSmithImg from '../images/jane_smith.jpeg';
 import michaelBrownImg from '../images/michael_brown.jpeg';
 import emilyJohnsonImg from '../images/emily_johnson.jpeg';
+import { fetchDeliveries } from '../services/driverService';
 
 const getDriverImage = (name) => {
     switch (name) {
@@ -22,6 +23,13 @@ const getDriverImage = (name) => {
 
 const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
     const [selectedDriver, setSelectedDriverLocal] = useState(null);
+    const [deliveries, setDeliveries] = useState([]);
+
+    useEffect(() => {
+        if (selectedDriver) {
+            fetchDeliveries(selectedDriver.id).then(setDeliveries);
+        }
+    }, [selectedDriver]);
 
     const handleDriverClick = (driver) => {
         setSelectedDriverLocal(driver);
@@ -41,6 +49,21 @@ const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
                 <p>Phone: {driver.phone}</p>
                 <p>Email: {driver.email}</p>
                 <p>Vehicle ID: {driver.vehicle_id}</p>
+            </div>
+        );
+    };
+
+    const renderDeliveries = () => {
+        return (
+            <div>
+                <h3>Deliveries</h3>
+                {deliveries.map((delivery) => (
+                    <div key={delivery.id}>
+                        <p>Delivery ID: {delivery.id}</p>
+                        <p>Status: {delivery.status}</p>
+                        <p>Address: {delivery.address}</p>
+                    </div>
+                ))}
             </div>
         );
     };
@@ -70,13 +93,16 @@ const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
             ))}
             <h3>Selected Driver</h3>
             {renderDriverDetails(selectedDriver)}
+            {selectedDriver && renderDeliveries()}
 
             <h3>Add Vehicle</h3>
             <button onClick={() => addVehicle('van')}>Add Van</button>
             <button onClick={() => addVehicle('truck')}>Add Truck</button>
-            <button onClick={() => addVehicle('bike')}>Add Bike</button>
+            <button onClick={() => addVehicle('bike')}>Add Bike
+            </button>
         </div>
     );
 };
 
 export default VerticalFrame;
+
