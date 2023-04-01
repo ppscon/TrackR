@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import VerticalFrame from './components/VerticalFrame';
 import './App.css';
-import { fetchDrivers, fetchDeliveries } from './services/driverService';
-
+import { fetchDrivers } from './services/driverService';
 
 function App() {
     const [selectedDriver, setSelectedDriver] = useState(null);
@@ -11,6 +10,7 @@ function App() {
 
     useEffect(() => {
         fetchDrivers().then((data) => {
+            console.log("Fetched drivers data:", data); // Add this line to log the fetched data
             if (Array.isArray(data)) {
                 setDrivers(data);
             } else {
@@ -18,7 +18,6 @@ function App() {
             }
         });
     }, []);
-
 
     return (
         <div className="App">
@@ -31,3 +30,4 @@ function App() {
 }
 
 export default App;
+

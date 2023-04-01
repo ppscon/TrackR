@@ -1,42 +1,46 @@
 import React, { useState, useEffect } from 'react';
+import Driver from './Driver';
 
 const DriverDeliveries = () => {
     const [drivers, setDrivers] = useState([]);
     const [deliveries, setDeliveries] = useState([]);
 
     useEffect(() => {
-        fetchDrivers();
-        fetchDeliveries();
+        fetchDrivers().then(() => {
+            console.log('Drivers fetched successfully.');
+        });
     }, []);
 
+    useEffect(() => {
+        if (drivers.length > 0) {
+            drivers.forEach((driver) => fetchDeliveries(driver.id));
+        }
+    }, [drivers]);
+
     const fetchDrivers = async () => {
-        const response = await fetch('http://localhost:3000/api/drivers');
-        const data = await response.json();
-        setDrivers(data);
+        try {
+            const response = await fetch('http://localhost:3000/api/drivers');
+            const data = await response.json();
+            setDrivers(data);
+        } catch (error) {
+            console.error('Error fetching drivers:', error);
+        }
     };
 
-    const fetchDeliveries = async () => {
-        const response = await fetch(`http://localhost:3000/api/drivers/${driverId}/deliveries`);
-        const data = await response.json();
-        setDeliveries(data);
+    const fetchDeliveries = async (driverId) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/drivers/${driverId}/deliveries`);
+            const data = await response.json();
+            setDeliveries((prevDeliveries) => [...prevDeliveries, ...data]);
+        } catch (error) {
+            console.error(`Error fetching deliveries for driver ${driverId}:`, error);
+        }
     };
-
 
     return (
         <div>
             {drivers.map((driver) => (
-                <div key={driver.id}>
-                    <h3>{driver.name}</h3>
-                    <ul>
-                        {deliveries
-                            .filter((delivery) => delivery.driver_id === driver.id)
-                            .map((delivery) => (
-                                <li key={delivery.id}>
-                                    Drop {delivery.drop_number}: {delivery.address}
-                                </li>
-                            ))}
-                    </ul>
-                </div>
+                <Driver key={driver.id} driver={driver} deliveries={deliveries} />
             ))}
         </div>
     );

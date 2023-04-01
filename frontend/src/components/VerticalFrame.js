@@ -6,6 +6,8 @@ import michaelBrownImg from '../images/michael_brown.jpeg';
 import emilyJohnsonImg from '../images/emily_johnson.jpeg';
 import { fetchDeliveries } from '../services/driverService';
 
+
+
 const getDriverImage = (name) => {
     switch (name) {
         case 'John Doe':
@@ -27,7 +29,12 @@ const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
 
     useEffect(() => {
         if (selectedDriver) {
-            fetchDeliveries(selectedDriver.id).then(setDeliveries);
+            fetchDeliveries(selectedDriver.id).then((fetchedDeliveries) => {
+                const driverWithDeliveries = { ...selectedDriver, deliveries: fetchedDeliveries };
+                setSelectedDriver(driverWithDeliveries);
+                setSelectedDriverLocal(driverWithDeliveries);
+                setDeliveries(fetchedDeliveries);
+            });
         }
     }, [selectedDriver]);
 
@@ -86,7 +93,8 @@ const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
                         <>
                             <h3>Coordinates</h3>
                             <p>Latitude: {driver.coordinates.latitude}</p>
-                            <p>Longitude: {driver.coordinates.longitude}</p>
+                            <p>Longitude: {driver.coordinates.longitude}</
+                                p>
                         </>
                     )}
                 </div>
@@ -97,6 +105,8 @@ const VerticalFrame = ({ addVehicle, drivers, setSelectedDriver }) => {
 
             <h3>Add Vehicle</h3>
             <button onClick={() => addVehicle('van')}>Add Van</button>
+
+
             <button onClick={() => addVehicle('truck')}>Add Truck</button>
             <button onClick={() => addVehicle('bike')}>Add Bike
             </button>

@@ -28,6 +28,7 @@ router.get('/drivers/:id', async (req, res) => {
     }
 });
 
+
 // Fetch deliveries for a specific driver by ID
 router.get('/drivers/:id/deliveries', async (req, res) => {
     const driverId = req.params.id;
