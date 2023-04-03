@@ -1,4 +1,14 @@
-// app.js
-require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const routes = require('./routes');
 
-// Rest of the code will be added later
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(routes);
+
+const port = process.env.PORT || 3002;
+app.listen(port, () => {
+    console.log(`Position Simulator running on port ${port}`);
+});

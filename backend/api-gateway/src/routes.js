@@ -11,6 +11,28 @@ router.get('/drivers', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+router.get('/api/simulated-drivers', async (req, res) => {
+    try {
+        const [driverRows] = await db.query('SELECT * FROM drivers');
+        const driversWithLocations = [];
+
+        for (const driver of driverRows) {
+            const [dropRows] = await db.query('SELECT * FROM deliveries WHERE driver_id = ?', [driver.id]);
+            const dropLocations = dropRows.map(drop => [drop.longitude, drop.latitude]);
+
+            driversWithLocations.push({
+                ...driver,
+                coordinates: [driver.longitude, driver.latitude],
+                dropLocations,
+            });
+        }
+
+        res.status(200).json(driversWithLocations);
+    } catch (error) {
+        res.status(500).json({ error: { message: error.message } });
+    }
+});
+
 
 // Fetch a specific driver by ID
 router.get('/drivers/:id', async (req, res) => {
@@ -46,7 +68,7 @@ router.post('/drivers', async (req, res) => {
     const newDriver = req.body;
 
     try {
-        const [result] = await db.query('INSERT INTO drivers SET ?', [newDriver]);
+        const [result] = await db.query("INSERT INTO drivers SET ? ", [newDriver]);
         res.status(201).json({ message: 'Driver created', driverId: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
